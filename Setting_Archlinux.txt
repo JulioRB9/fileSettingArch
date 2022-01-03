@@ -1,0 +1,111 @@
+1 -> PONER TECLADO EN ESPAÑOL
+     root@archiso~# loadkeys la-latin1
+
+2 -> PARTICIONAR
+     roo@archiso~# cfdisk
+	> /dev/sda1 >> Es la particion bootable     | 200M
+	> /dev/sda2 >> Es la particion para el SWAP | 2G
+	> /dev/sda3 >> Es la particion para ROOT    | 30G
+	> /dev/sda4 >> Es la particion para HOME    | HOME8
+
+3 -> FORMATEAR LAS PARTICIONES
+     root@archiso~# mkfs -t btrfs /dev/sda1 #boot
+     root@archiso~# mkfs -t btrfs /dev/sda3 #Raiz
+     root@archiso~# mkfs -t btrfs /dev/sda4 #HOME
+     root@archiso~# mkswap /dev/sda2 #SWAP
+     root@archiso~# swapon /dev/sda2 #Activar Swap
+     root@archiso~# lsblk -f
+
+4 -> MONTAR O ORGANIZAR LAS PARTICIONES
+     root@archiso~# mount /dev/sda3 /mnt #MONTAR PARTICION RAIZ
+     root@archiso~# mkdir /mnt/boot #CREAR DIRECTORIO BOOT
+     root@archiso~# mkdir /mnt/home #CREAR DORECTORIO HOMEN
+     root@archiso~# mount /dev/sda1 /mnt/boot
+     root@archiso~# mount /dev/sda4 /mnt/home
+
+5 -> INSTALACION DE LOS PAQUETES DEL SISTEMAS
+     root@archiso~# pacstrap /mnt base linux linux-firmware networkmanager
+
+6 -> CONFIGURACIONES DEL SISTEMAS
+     root@archiso~# genfstab -U /mnt >> /mnt/etc/fstab
+     root@archiso /# arch-chroot /mnt
+     root@archiso /# ln -sf /usr/share/zoneinfo/America/Mexico_City /etc/localtime
+     root@archiso /# hwclock --systohc --localtime
+     root@archiso /# pacman -Sy noevim
+     root@archiso /# nano /etc/locale.gen
+  	en_US.UTF-8 UTF-8
+	en_US ISO-8859-1
+
+     root@archiso /# locale-gen
+     root@archiso /# nano /etc/locale.conf
+	LANG=en_US.UTF-8
+
+     root@archiso /# nano /etc/vconsole.conf
+	KEYMAP=la-latin1
+
+     root@archiso /# nano /etc/hostname
+     	arch
+
+     root@archiso /# systemctl enable NetworkManager.service
+     root@archiso /# pacman –Sy grub os-prober
+     root@archiso /# grub-install /dev/sda
+     root@archiso /# os-prober # SO windows10
+     root@archiso /# grub-mkconfig –o /boot/grub/grub.cfg
+     root@archiso /# mkinitcpio -P
+     root@archiso /# passwd
+     root@archiso /# exit
+     root@archiso~# reboot
+
+###########################################################
+     [root@arch ~]# systemctl enable NetworkManager.service
+     [root@arch ~]# systemctl start NetworkManager.service
+     [root@arch ~]# useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power,scanner -s /bin/bash username
+
+     [root@arch ~]# passwd manager
+     [root@arch ~]# pacman -Sy sudo
+     [root@arch ~]# nvim /etc/sudoers
+	%wheel All=(All) All
+     [root@arch ~]# sudo pacman -S xorg-server xorg-xinit
+INTEL
+	sudo pacman -Sy mesa mesa-demos xf86-video-intel
+AMD
+	sudo pacman -Sy xf86-video-amdgpu amd-ucode
+
+Ver lista de drivers en repositorios
+	sudo pacman -Ss xf86-video
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+:::::::::CONFIGURACION SESION DE ARCHLINUX::::::
+Comprobar el estado del controlador
+	$ dmesg | grep usbcore
+
+Conocer la interfaz de inalambrica
+	$ ip link
+
+Activar la interfaz
+	$ ip link set wlp2s0bl up
+
+Eventos de mensajes del kernel relativo al cargar del firmware
+	$ dmesg | grep firmware
+
+Modulo de dispositivos
+	$ lspci -vvnn | grep -A 9 Network | grep Kernel
+
+Controlador Synaptics PARA TOUCHPAD
+	$ sudo pacman -S xf86-input-synaptics
+
+Para wifi
+	$ sudo pacman -S netctl wpa_supplicant dialog
+
+Conectar a la red WIFI
+	$ sudo nmcli dev wifi connect "SSID" password "contraseña"
+
+Arch app
+$ sudo pacman -S gtop
+$ sudo pacman -S Qbittorrent
+$ sudo pacman -S Zathura => Viso de PDF
+$ sudo pacman -S Filezilla => Cliente FTP
+$ sudo pacman -S Htop => Analizando procesos, etc
+$ sudo pacman -S ttf-dejavu ttf-inconsolata => Fuentes
+$ sudo pacman –S alsa-firmware alsa-utils alsa-plugins pulseaudio-alsa pulseaudio => sonido
+$ sudo pacman –S Rofi => https://wiki.archlinux.org/index.php/Rofi
