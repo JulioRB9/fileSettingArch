@@ -1,0 +1,23 @@
+REQUICITOS PARA INSTALAR ENTORNO VIRTUAL DE ARCH LINUX
+
+https://wiki.archlinux.org/title/Xinit
+
+1. Copiar archivo de configuracion existente de arch
+   $ cp /etc/X11/xinit/xinitrc ~/.xinitrc
+
+2. Paquete de compilacion
+ https://amuse.readthedocs.io/en/latest/install/install-prerequisites-arch.html
+    $ sudo pacman -Syu base-devel curl
+3. Instalr gestor de paquete yay
+https://github.com/Jguer/yay
+	$ sudo pacman -S --needed git base-devel
+	$ git clone https://aur.archlinux.org/yay.git
+	$ cd yay
+	$ makepkg -si
+
+4. Intalar paquete webkit
+
+##################################################################################
+
+PARCHAR DWM
+$ sudo patch -p1 < path/*.diff
