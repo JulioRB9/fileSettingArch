@@ -32,7 +32,7 @@
      root@archiso /# ln -sf /usr/share/zoneinfo/America/Mexico_City /etc/localtime
      root@archiso /# hwclock --systohc --localtime
      root@archiso /# pacman -Sy noevim
-     root@archiso /# nano /etc/locale.gen
+     root@archiso /# nvim /etc/locale.gen
   	en_US.UTF-8 UTF-8
 	en_US ISO-8859-1
 
@@ -61,7 +61,7 @@
      [root@arch ~]# systemctl start NetworkManager.service
      [root@arch ~]# useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power,scanner -s /bin/bash username
 
-     [root@arch ~]# passwd manager
+     [root@arch ~]# passwd dwm   'Arevir'
      [root@arch ~]# pacman -Sy sudo
      [root@arch ~]# nvim /etc/sudoers
 	%wheel All=(All) All
@@ -106,6 +106,5 @@ $ sudo pacman -S Qbittorrent
 $ sudo pacman -S Zathura => Viso de PDF
 $ sudo pacman -S Filezilla => Cliente FTP
 $ sudo pacman -S Htop => Analizando procesos, etc
-$ sudo pacman -S ttf-dejavu ttf-inconsolata => Fuentes
 $ sudo pacman –S alsa-firmware alsa-utils alsa-plugins pulseaudio-alsa pulseaudio => sonido
 $ sudo pacman –S Rofi => https://wiki.archlinux.org/index.php/Rofi
