@@ -19,5 +19,15 @@ https://github.com/Jguer/yay
 
 ##################################################################################
 
-PARCHAR DWM
+Comando para parchear path DWM
 $ sudo patch -p1 < path/*.diff
+$ sudo path -R < path/*.diff
+
+- Script DWM
+- slstatus
+- dmenu
+- st
+# Configurar teclado en el archivo .xinitrc
+  $ vim .xinit
+  $ setxkbmap -layout latam
+
