@@ -31,3 +31,7 @@ $ sudo path -R < path/*.diff
   $ vim .xinit
   $ setxkbmap -layout latam
 
+==================================================================================
+
+      THEME PARA SDDM
+1. https://aur.archlinux.org/packages/sddm-theme-astronaut
