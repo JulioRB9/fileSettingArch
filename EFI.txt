@@ -1,0 +1,82 @@
+1.- Cambiar el metodo de entrada de teclado
+    roo@archiso~# loadkeys la-latin1
+
+2.- Arrancar desde el USB en modo UEFI
+    roo@archiso~# ls /sys/firmware/efi/efivars
+
+3.- Borra y crea particiones "Preparar el disco (modo GPT)"
+    roo@archiso~# lsblk
+
+    Particiones mínimas recomendadas:
+        EFI System Partition (ESP)
+        Tipo: EFI System
+        Tamaño: 512MB
+        Formato: FAT32
+        Punto de montaje: /boot
+
+    roo@archiso~# cfdisk
+	> /dev/sda1 >> Es la particion bootable  EFI   | 512MB
+	> /dev/sda2 >> Es la particion para el SWAP | 1G
+	> /dev/sda3 >> Es la particion para ROOT    | 30G
+
+
+4.- FORMATEAR LAS PARTICIONES
+    roo@archiso~# mkfs.fat -F32 /dev/sda1         # EFI
+    roo@archiso~# mkswap /dev/sda2                # Swap (si tienes)
+    roo@archiso~# mkfs.ext4 /dev/sda3             # Root
+
+5.- Montar el sistema
+    roo@archiso~# mount /dev/sda3 /mnt                   # Monta la raíz ROOT
+    roo@archiso~# mkdir /mnt/boot
+    roo@archiso~# mount /dev/sda1 /mnt/boot             # Monta la partición EFI
+    roo@archiso~# swapon /dev/sda2                      # Activa swap si aplica
+
+6.- INSTALACION DE LOS PAQUETES DEL SISTEMAS
+    root@archiso~# pacstrap /mnt base linux linux-firmware nano networkmanager grub efibootmgr
+    
+7. Configurar el sistema
+    root@archiso~# genfstab -U /mnt >> /mnt/etc/fstab
+    root@archiso~# arch-chroot /mnt
+    [root@archiso /]# ln -sf /usr/share/zoneinfo/America/Mexico_City /etc/localtime
+    [root@archiso /]# hwclock --systohc --localtime
+    [root@archiso /]# nvim /etc/locale.gen
+    en_US.UTF-8 UTF-8
+    
+    [root@archiso /]# locale-gen
+    [root@archiso /]# echo "LANG=en_US.UTF-8" > /etc/locale.conf
+    [root@archiso /]# echo "ArchDWM" > /etc/hostname
+
+    Edita /etc/hosts:
+        127.0.0.1   localhost
+        ::1         localhost
+        127.0.1.1   archlinux.localdomain archlinux
+
+08.- Crear usuario y contraseña
+    [root@archiso /]# passwd             # Contraseña root
+    [root@archiso /]# useradd -m -G users,audio,lp,optical,storage,video,wheel,games,power,scanner -s /bin/bash julio
+
+09.- Instalar GRUB (modo UEFI)
+    [root@archiso /]# grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
+    [root@archiso /]# grub-mkconfig -o /boot/grub/grub.cfg
+
+10.- Habilitar servicios
+    [root@archiso /]# systemctl enable NetworkManager
+
+11.- Salir y reiniciar
+    [root@archiso /]# exit
+    roo@archiso~# umount -R /mnt
+    roo@archiso~# swapoff -a
+    roo@archiso~# reboot
+________________________________________________________________________________________________________________________
+
+01. Instala Xorg y utilidades básicas
+    [root@julio ~]# pacman -Sy sudo
+    [root@julio ~]# nano /etc/sudoers
+    [root@julio ~]# sudo pacman -S xorg-server xorg-apps xorg-xinit xterm
+    [root@julio ~]# sudo pacman -S xclip xwallpaper feh xdotool
+    [root@julio ~]# sudo pacman -S base-devel
+
+02.- Crear archivo .xinitrc para iniciar DWM
+    [root@julio ~]# nano ~/.xinitrc
+
+
